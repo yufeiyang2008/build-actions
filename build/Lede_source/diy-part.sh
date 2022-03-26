@@ -10,25 +10,29 @@
 
 
 cat >$NETIP <<-EOF
-uci set network.lan.ipaddr='192.168.2.2'                                    # IPv4 地址(openwrt后台地址)
-uci set network.lan.netmask='255.255.255.0'                                 # IPv4 子网掩码
-uci set network.lan.gateway='192.168.2.1'                                   # IPv4 网关
-uci set network.lan.broadcast='192.168.2.255'                               # IPv4 广播
-uci set network.lan.dns='223.5.5.5 114.114.114.114'                         # DNS(多个DNS要用空格分开)
-uci set network.lan.delegate='0'                                            # 去掉LAN口使用内置的 IPv6 管理
+uci set network.wan.proto='pppoe'
+uci set network.wan.username='051019840524'
+uci set network.wan.password='07271314'
+uci set network.wan.ifname='eth1'
+uci set network.wan6.ifname='eth1'
+uci set network.lan.ipaddr='192.168.123.1'
+uci set network.lan.proto='static'
+uci set network.lan.type='bridge'
+uci set network.lan.ifname='eth0'
+#uci set network.lan.delegate='0'                                            # 去掉LAN口使用内置的 IPv6 管理
 uci commit network                                                          # 不要删除跟注释,除非上面全部删除或注释掉了
 #uci set dhcp.lan.ignore='1'                                                 # 关闭DHCP功能（去掉uci前面的#生效）
 #uci commit dhcp                                                             # 跟‘关闭DHCP功能’联动,同时启用或者删除跟注释（去掉uci前面的#生效）
-uci set system.@system[0].hostname='OpenWrt-123'                            # 修改主机名称为OpenWrt-123
-#sed -i 's/\/bin\/login/\/bin\/login -f root/' /etc/config/ttyd              # 设置ttyd免帐号登录，如若开启，进入OPENWRT后可能要重启一次才生效（去掉uci前面的#生效）
+uci set system.@system[0].hostname='yufeiyang'                            # 修改主机名称为OpenWrt-123
+sed -i 's/\/bin\/login/\/bin\/login -f root/' /etc/config/ttyd              # 设置ttyd免帐号登录，如若开启，进入OPENWRT后可能要重启一次才生效（去掉uci前面的#生效）
 EOF
 
-
+rm -rf ./package/lean/luci-theme-argon && git clone -b 18.06 https://github.com/jerrykuku/luci-theme-argon.git package/lean/luci-theme-argon  #新的argon主题
 sed -i 's/luci-theme-bootstrap/luci-theme-argon/g' feeds/luci/collections/luci/Makefile             # 选择argon为默认主题
 
 sed -i "s/OpenWrt /${Author} compiled in $(TZ=UTC-8 date "+%Y.%m.%d") @ OpenWrt /g" $ZZZ_PATH       # 增加个性名字 ${Author} 默认为你的github帐号
 
-sed -i '/CYXluq4wUazHjmCDBCqXF/d' $ZZZ_PATH                                                         # 设置密码为空
+#sed -i '/CYXluq4wUazHjmCDBCqXF/d' $ZZZ_PATH                                                         # 设置密码为空
 
 sed -i '/to-ports 53/d' $ZZZ_PATH                                                                   # 删除默认防火墙
 
