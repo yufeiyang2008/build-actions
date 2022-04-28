@@ -37,6 +37,7 @@ EOF
 
 
 # 设置 argon 为编译必选主题(可自行修改您要的,主题名称必须对,源码内必须有该主题)
+rm -rf ./package/lean/luci-theme-argon && git clone -b 18.06 https://github.com/jerrykuku/luci-theme-argon.git package/lean/luci-theme-argon  #新的argon主题
 sed -i 's/luci-theme-bootstrap/luci-theme-argon/g' feeds/luci/collections/luci/Makefile
 
 
